@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rocks Digital | Digital Catalogue</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #101010;
+            color: white;
+            text-align: center;
+        }
+
+        header {
+            background: #000;
+            padding: 35px 15px;
+            border-bottom: 2px solid gold;
+        }
+
+        h1 {
+            color: gold;
+            font-size: 36px;
+        }
+
+        .tagline {
+            color: #ccc;
+            margin-top: 12px;
+        }
+
+        .draft {
+            display: inline-block;
+            background: gold;
+            color: black;
+            padding: 8px 18px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .welcome {
+            padding: 45px 20px;
+        }
+
+        h2 {
+            color: gold;
+            margin-bottom: 20px;
+        }
+
+        .catalogue {
+            padding: 30px 20px;
+        }
+
+        .products {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            background: #202020;
+            border: 1px solid gold;
+            border-radius: 12px;
+            padding: 25px;
+            width: 280px;
+            text-align: left;
+        }
+
+        .card h3 {
+            color: gold;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #ddd;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .price {
+            color: gold !important;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .button {
+            display: inline-block;
+            background: gold;
+            color: black;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #e0bd00;
+        }
+
+        .empty {
+            color: #bbb;
+            padding: 25px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 25px;
+            background: black;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>ROCKS DIGITAL</h1>
+
+        <p class="tagline">
+            Smart Solutions for a Smarter Tomorrow
+        </p>
+
+        <div class="draft">
+            CATALOGUE DRAFT
+        </div>
+    </header>
+
+    <section class="welcome">
+        <h2>Welcome to Rocks Digital</h2>
+
+        <p>
+            Explore our digital products and services.
+        </p>
+    </section>
+
+    <section class="catalogue">
+
+        <h2>Our Digital Catalogue</h2>
+
+        <div class="products" id="productContainer">
+        </div>
+
+    </section>
+
+    <section id="contact" class="welcome">
+
+        <h2>Contact Rocks Digital</h2>
+
+        <p>
+            Interested in our products?
+        </p>
+
+        <p>
+            Contact details will be added soon.
+        </p>
+
+    </section>
+
+    <footer>
+        <p>
+            © 2026 Rocks Digital. All Rights Reserved.
+        </p>
+    </footer>
+
+    <script>
+
+        const STORAGE_KEY = "rocksDigitalProducts";
+
+        function loadProducts() {
+
+            const container =
+                document.getElementById("productContainer");
+
+            container.replaceChildren();
+
+            let products = [];
+
+            try {
+                const savedProducts = JSON.parse(
+                    localStorage.getItem(STORAGE_KEY) || "[]"
+                );
+
+                if (Array.isArray(savedProducts)) {
+                    products = savedProducts;
+                }
+
+            } catch (error) {
+                console.error("Unable to load products:", error);
+            }
+
+            if (products.length === 0) {
+
+                const message = document.createElement("p");
+
+                message.className = "empty";
+
+                message.textContent =
+                    "No products available right now.";
+
+                container.appendChild(message);
+
+                return;
+            }
+
+            products.forEach(function(product) {
+
+                const card = document.createElement("div");
+                card.className = "card";
+
+                const title = document.createElement("h3");
+                title.textContent = product.name || "Unnamed Product";
+
+                const description = document.createElement("p");
+                description.textContent =
+                    product.description || "";
+
+                const price = document.createElement("p");
+                price.className = "price";
+
+                const amount = Number(product.price);
+
+                price.textContent =
+                    "₹" + (
+                        Number.isFinite(amount)
+                            ? amount.toFixed(2)
+                            : "0.00"
+                    );
+
+                const button = document.createElement("a");
+
+                button.href = "#contact";
+                button.className = "button";
+                button.textContent = "Enquire Now";
+
+                card.appendChild(title);
+                card.appendChild(description);
+                card.appendChild(price);
+                card.appendChild(button);
+
+                container.appendChild(card);
+
+            });
+        }
+
+        loadProducts();
+
+        window.addEventListener("storage", function(event) {
+            if (event.key === STORAGE_KEY) {
+                loadProducts();
+            }
+        });
+
+        window.addEventListener("focus", loadProducts);
+
+    </script>
+
+</body>
+</html>
